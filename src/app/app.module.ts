@@ -7,12 +7,12 @@ import { AppRoutingModule } from './app-routing.module';
 import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './auth/pages/login/login.component';
 import { CoreModule } from './core/core.module';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AuthComponent,
-    LoginComponent
+   
   ],
   imports: [
     BrowserModule,
@@ -20,6 +20,7 @@ import { CoreModule } from './core/core.module';
     CoreModule,
     DashboardModule,
     AppRoutingModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

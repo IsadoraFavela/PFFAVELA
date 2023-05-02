@@ -1,0 +1,28 @@
+{
+  "usuarios": [
+    {
+      "id": 1,
+      "nombre": "Isadora",
+      "apellido": "Favela",
+      "email": "isadorafavela@outlook.com",
+      "password": "1234567",
+      "token": "asdfghjkl@",
+      "role": "admin"
+    },
+    {
+      "id": 2
+    },
+    {
+      "id": 3
+    },
+    {
+      "nombre": "Emmanuel",
+      "apellido": "Gonzalez",
+      "email": "emma@outlook.com",
+      "password": "12345679",
+      "token": "asdfghjkl@lkadaad",
+      "role": "user",
+      "id": 4
+    }
+  ]
+}

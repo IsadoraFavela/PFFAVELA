@@ -14,20 +14,20 @@ export class AlumnosService {
   private estudiantes$ = new BehaviorSubject<Alumno[]>([
     {
       id: 1,
-      nombre: 'Juan',
-      apellido: 'Sosa',
+      nombre: 'Emmanuel',
+      apellido: 'Gonzalez',
       fecha_registro: new Date()
     },
     {
       id: 2,
-      nombre: 'Miriam',
-      apellido: 'Paez',
+      nombre: 'Sara',
+      apellido: 'Hernández',
       fecha_registro: new Date()
     },
     {
       id: 3,
-      nombre: 'Cynthia',
-      apellido: 'Coronel',
+      nombre: 'Karen',
+      apellido: 'Galvan',
       fecha_registro: new Date()
     },
   ])
