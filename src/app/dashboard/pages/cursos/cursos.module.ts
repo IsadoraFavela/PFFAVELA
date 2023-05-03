@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { CursoDetalleComponent } from './pages/curso-detalle/curso-detalle.component';
+import { CursosRoutingModule } from './cursos-routing.module';
 
 
 @NgModule({
@@ -33,6 +34,13 @@ import { CursoDetalleComponent } from './pages/curso-detalle/curso-detalle.compo
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
+  ],
+  exports: [
+    CursosComponent,
+    CursoDetalleComponent,
+    CursosRoutingModule,
   ]
+
+  
 })
 export class CursosModule { }

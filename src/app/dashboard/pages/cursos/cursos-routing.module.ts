@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { AlumnosComponent } from './alumnos.component';
-import { AlumnoDetalleComponent } from './pages/alumno-detalle/alumno-detalle.component';
+import { CursosComponent } from './cursos.component';
+import { CursoDetalleComponent } from './pages/curso-detalle/curso-detalle.component';
 
 
 
@@ -13,17 +13,17 @@ import { AlumnoDetalleComponent } from './pages/alumno-detalle/alumno-detalle.co
     RouterModule.forChild([
       {
       path:'',
-      component: AlumnosComponent
+      component: CursosComponent
       },
       {
         path: ':id',
-        component: AlumnoDetalleComponent
+        component: CursoDetalleComponent
       }
 
     ])
   ],
   exports: [
-    RouterModule
+    RouterModule,
   ]
 })
-export class AlumnosRoutingModule { }
+export class CursosRoutingModule { }

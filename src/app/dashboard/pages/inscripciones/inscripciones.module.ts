@@ -13,6 +13,7 @@ import { MatTableModule } from '@angular/material/table';
 import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { AbmInscripcionesComponent } from './components/abm-inscripciones/abm-inscripciones.component';
 import { InscripcionesDetalleComponent } from './pages/inscripciones-detalle/inscripciones-detalle.component';
+import { InscripcionesRoutingModule } from './inscripciones-routing.module';
 
 
 
@@ -37,6 +38,8 @@ import { InscripcionesDetalleComponent } from './pages/inscripciones-detalle/ins
   ],
   exports: [
     InscripcionesComponent, 
+    InscripcionesDetalleComponent,
+    InscripcionesRoutingModule,
   ]
 })
 export class InscripcionesModule { }
