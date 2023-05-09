@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, catchError, map, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, throwError } from 'rxjs';
 import { Usuario } from 'src/app/core/models';
 import { enviroment } from 'src/environments/environments';
 
@@ -75,8 +75,9 @@ export class AuthService {
           return !!usuarioAutenticado;
         }),
         catchError((err) => {
-          alert('Error al verificar el token');
-          return throwError(() => err);
+          //alert('Error al verificar el token');
+          //return throwError(() => err);
+          return of (false);
         })
       );
   }
