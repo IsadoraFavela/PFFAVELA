@@ -9,9 +9,11 @@ import { RouterModule } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 
 
+
 @NgModule({
   declarations: [
     DashboardComponent,
+    
   
   ],
   imports: [
@@ -38,6 +40,10 @@ import { MatListModule } from '@angular/material/list';
         path: 'inscripciones',
         loadChildren: () => import('./pages/inscripciones/inscripciones.module').then((i) => i.InscripcionesModule),
        },
+       {
+        path: 'usuarios',
+        loadChildren: () => import('./pages/usuarios/usuarios.module').then((u) => u.UsuariosModule),
+       }
     ])
   ],
   exports: [

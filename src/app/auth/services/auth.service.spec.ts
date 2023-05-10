@@ -46,6 +46,7 @@ describe('Pruebas sobre AuthService', () => {
         done();
       });
     service.login(loginFake);
+    
     httpController
       .expectOne({
         // http://localhost:3000/usuarios

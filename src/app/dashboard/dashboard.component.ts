@@ -4,6 +4,7 @@ import { AuthService } from '../auth/services/auth.service';
 import { Usuario } from '../core/models';
 import { Observable, Subject, takeUntil } from 'rxjs';
 import links from './nav-items';
+import linksAdmin from './nav-items-admin';
 import { Router } from '@angular/router';
 
 @Component({
@@ -18,6 +19,7 @@ export class DashboardComponent implements OnDestroy {
   authUser$: Observable<Usuario | null>;
 
   links = links;
+  linksAdmin = linksAdmin;
 
   destroyed$ = new Subject<void>();
 

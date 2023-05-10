@@ -20,7 +20,7 @@ const links: NavItem[] = [
     title: 'Inscripciones',
     icon: 'done'
 
-  }
+  },
 ]
 
 export default links;

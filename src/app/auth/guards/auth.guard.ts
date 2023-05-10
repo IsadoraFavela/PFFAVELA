@@ -14,11 +14,13 @@ export class AuthGuard implements CanActivate {
       return this.authService.obtenerUsuarioAutenticado()
         .pipe(
           map((usuarioAutenticado) => {
-            if (usuarioAutenticado?.role !== 'admin') {
-              alert('No tienes permiso')
-              return false;
-            } else {
+            if (usuarioAutenticado) {
+              //alert('No tienes permiso')
+              //return false;
               return true;
+            } else {
+               alert('No tienes permiso')
+              return false;
             }
           })
         )
