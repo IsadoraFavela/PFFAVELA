@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, isDevMode } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,13 +15,11 @@ import { UsuariosDetalleComponent } from './pages/usuarios-detalle/usuarios-deta
 import { UsuariosRoutingModule } from './usuarios-routing.module';
 import { AbmUsuariosComponent } from './components/abm-usuarios/abm-usuarios.component';
 
-
-
 @NgModule({
   declarations: [
     UsuariosComponent,
     AbmUsuariosComponent,
-    UsuariosDetalleComponent
+    UsuariosDetalleComponent,
   ],
   imports: [
     CommonModule,
@@ -36,10 +34,6 @@ import { AbmUsuariosComponent } from './components/abm-usuarios/abm-usuarios.com
     MatDatepickerModule,
     MatNativeDateModule,
   ],
-  exports: [
-    UsuariosComponent, 
-    UsuariosDetalleComponent,
-    UsuariosRoutingModule,
-  ]
+  exports: [UsuariosComponent, UsuariosDetalleComponent, UsuariosRoutingModule],
 })
-export class UsuariosModule { }
+export class UsuariosModule {}
