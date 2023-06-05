@@ -16,7 +16,23 @@
       "password": "12345679",
       "token": "asdfghjkl@lkadaad",
       "role": "user",
-      "id": 4
+      "id": 2
+    }
+  ],
+  "inscripciones": [
+    {
+      "id": 2,
+      "estudiante": "Sara ",
+      "nombre_curso": "Flutter",
+      "fecha_fin": "2023-05-18T01:27:59:6317",
+      "fecha_inicio": "2023-01-27T01:27:59:6317"
+    },
+    {
+      "id": 3,
+      "estudiante": "Karen",
+      "nombre_curso": "Angular Js",
+      "fecha_fin": "2023-04-27T01:27:59:6317",
+      "fecha_inicio": "2023-03-27T01:27:59:6317"
     }
   ]
 }

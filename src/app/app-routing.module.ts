@@ -6,13 +6,13 @@ import { AuthGuard } from './auth/guards/auth.guard';
 import { LoginGuard } from './auth/guards/login.guard';
 
 const routes: Routes = [
- 
   {
     path: 'dashboard',
     canActivate: [AuthGuard],
     component: DashboardComponent,
     //children: []
-    loadChildren: () => import('./dashboard/dashboard.module').then((m) => m.DashboardModule)
+    loadChildren: () =>
+      import('./dashboard/dashboard.module').then((m) => m.DashboardModule),
   },
 
   // AUTH
@@ -20,8 +20,7 @@ const routes: Routes = [
     path: 'auth',
     canActivate: [LoginGuard],
     component: AuthComponent,
-    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule)
-    
+    loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
   },
 
   // RUTAS INDEFINIDAS....
@@ -29,15 +28,11 @@ const routes: Routes = [
     // CUALQUIER RUTA
     path: '**',
     redirectTo: 'dashboard',
-  }
-]
+  },
+];
 
 @NgModule({
-  imports: [
-    RouterModule.forRoot(routes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forRoot(routes)],
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

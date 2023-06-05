@@ -1,12 +1,14 @@
-import { Component, Inject} from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-
+import { Store } from '@ngrx/store';
+import { InscripcionesActions } from '../../store/inscripciones.actions';
+import { CrearInscripcionPayload } from '../../models';
 
 @Component({
   selector: 'app-abm-inscripciones',
   templateUrl: './abm-inscripciones.component.html',
-  styleUrls: ['./abm-inscripciones.component.scss']
+  styleUrls: ['./abm-inscripciones.component.scss'],
 })
 export class AbmInscripcionesComponent {
   nombreControl = new FormControl('', [Validators.required]);
@@ -23,8 +25,8 @@ export class AbmInscripcionesComponent {
   constructor(
     private dialogRef: MatDialogRef<AbmInscripcionesComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any,
+    private store: Store
   ) {
-
     if (data) {
       const cursoParaEditar = data.inscripcion;
       this.nombreControl.setValue(cursoParaEditar.estudiante);
@@ -34,14 +36,12 @@ export class AbmInscripcionesComponent {
     }
   }
   guardar(): void {
-   
-  
-    
-    if (this.inscripcionForm.valid) {
-      console.log( this.inscripcionForm.value);
-      this.dialogRef.close(this.inscripcionForm.value)
-    } else {
-      this.inscripcionForm.markAllAsTouched();
-    }
+    this.store.dispatch(
+      InscripcionesActions.createInscripcion({
+        data: this.inscripcionForm.value as CrearInscripcionPayload,
+      })
+    );
+
+    this.dialogRef.close();
   }
 }

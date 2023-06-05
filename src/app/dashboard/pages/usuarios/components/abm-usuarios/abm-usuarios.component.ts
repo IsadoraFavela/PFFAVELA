@@ -5,38 +5,41 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
   selector: 'app-abm-usuarios',
   templateUrl: './abm-usuarios.component.html',
-  styleUrls: ['./abm-usuarios.component.scss']
+  styleUrls: ['./abm-usuarios.component.scss'],
 })
 export class AbmUsuariosComponent {
-
   nombreControl = new FormControl('', [Validators.required]);
-  fechaInicioControl = new FormControl('', [Validators.required]);
-  fechaFinControl = new FormControl('', [Validators.required]);
+  apellidoControl = new FormControl('', [Validators.required]);
+  emailControl = new FormControl('', [Validators.required]);
+  rolControl = new FormControl('', [Validators.required]);
+  passwordControl = new FormControl('', [Validators.required]);
 
-  cursoForm = new FormGroup({
+  userForm = new FormGroup({
     nombre: this.nombreControl,
-    fecha_inicio: this.fechaInicioControl,
-    fecha_fin: this.fechaInicioControl,
+    apellido: this.apellidoControl,
+    email: this.emailControl,
+    role: this.rolControl,
+    password: this.passwordControl,
   });
-
   constructor(
     private dialogRef: MatDialogRef<AbmUsuariosComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: any,
+    @Inject(MAT_DIALOG_DATA) private data: any
   ) {
     if (data) {
       const cursoParaEditar = data.curso;
       this.nombreControl.setValue(cursoParaEditar.nombre);
-      this.fechaInicioControl.setValue(cursoParaEditar.fecha_inicio);
-      this.fechaFinControl.setValue(cursoParaEditar.fecha_fin);
+      this.apellidoControl.setValue(cursoParaEditar.apellido);
+      this.emailControl.setValue(cursoParaEditar.email);
+      this.rolControl.setValue(cursoParaEditar.role);
+      this.passwordControl.setValue(cursoParaEditar.password);
     }
   }
 
-
   guardar(): void {
-    if (this.cursoForm.valid) {
-      this.dialogRef.close(this.cursoForm.value)
+    if (this.userForm.valid) {
+      this.dialogRef.close(this.userForm.value);
     } else {
-      this.cursoForm.markAllAsTouched();
+      this.userForm.markAllAsTouched();
     }
   }
 }

@@ -1,35 +1,51 @@
 <h1 mat-dialog-title>ABM Usuarios</h1>
 <div mat-dialog-content>
-  <form class="grid formgrid" [formGroup]="cursoForm">
+  <form class="grid formgrid" [formGroup]="userForm">
     <!-- CONTROL DE NOMBRE -->
 
     <div class="col-12 field">
       <mat-form-field class="w-full">
         <mat-label>Nombre</mat-label>
-        <input
-          [formControl]="nombreControl"
-          type="text"
-          matInput
-        >
-        <mat-error *ngFor="let error of nombreControl.errors | keyvalue">{{ error | controlErrorMessages }}</mat-error>
+        <input [formControl]="nombreControl" type="text" matInput />
+        <mat-error *ngFor="let error of nombreControl.errors | keyvalue">{{
+          error | controlErrorMessages
+        }}</mat-error>
       </mat-form-field>
     </div>
-    <div class="col-6">
+    <div class="col-12 field">
       <mat-form-field class="w-full">
-        <mat-label>Fecha de inicio</mat-label>
-        <input [formControl]="fechaInicioControl" matInput [matDatepicker]="fechaInicioPicker">
-        <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="fechaInicioPicker"></mat-datepicker-toggle>
-        <mat-datepicker #fechaInicioPicker></mat-datepicker>
+        <mat-label>Apellido</mat-label>
+        <input [formControl]="apellidoControl" type="text" matInput />
+        <mat-error *ngFor="let error of apellidoControl.errors | keyvalue">{{
+          error | controlErrorMessages
+        }}</mat-error>
       </mat-form-field>
     </div>
-    <div class="col-6">
+    <div class="col-12 field">
       <mat-form-field class="w-full">
-        <mat-label>Fecha de fin</mat-label>
-        <input [formControl]="fechaFinControl" matInput [matDatepicker]="fechaFinPicker">
-        <mat-hint>MM/DD/YYYY</mat-hint>
-        <mat-datepicker-toggle matIconSuffix [for]="fechaFinPicker"></mat-datepicker-toggle>
-        <mat-datepicker #fechaFinPicker></mat-datepicker>
+        <mat-label>Correo electronico</mat-label>
+        <input [formControl]="emailControl" type="text" matInput />
+        <mat-error *ngFor="let error of emailControl.errors | keyvalue">{{
+          error | controlErrorMessages
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-12 field">
+      <mat-form-field class="w-full">
+        <mat-label>Contraseña</mat-label>
+        <input [formControl]="passwordControl" type="password" matInput />
+        <mat-error *ngFor="let error of passwordControl.errors | keyvalue">{{
+          error | controlErrorMessages
+        }}</mat-error>
+      </mat-form-field>
+    </div>
+    <div class="col-6 field">
+      <mat-form-field class="w-full">
+        <mat-label>Rol</mat-label>
+        <input [formControl]="rolControl" type="text" matInput />
+        <mat-error *ngFor="let error of rolControl.errors | keyvalue">{{
+          error | controlErrorMessages
+        }}</mat-error>
       </mat-form-field>
     </div>
   </form>
@@ -39,4 +55,3 @@
   <button mat-button mat-dialog-close>Cancelar</button>
   <button (click)="guardar()" mat-button>Guardar</button>
 </div>
-

@@ -14,14 +14,16 @@ import { PipesModule } from 'src/app/shared/pipes/pipes.module';
 import { AbmInscripcionesComponent } from './components/abm-inscripciones/abm-inscripciones.component';
 import { InscripcionesDetalleComponent } from './pages/inscripciones-detalle/inscripciones-detalle.component';
 import { InscripcionesRoutingModule } from './inscripciones-routing.module';
-
-
+import { EffectsModule } from '@ngrx/effects';
+import { InscripcionesEffects } from './store/inscripciones.effects';
+import { StoreModule } from '@ngrx/store';
+import { inscripcionesFeature } from './store/inscripciones.reducer';
 
 @NgModule({
   declarations: [
     InscripcionesComponent,
     AbmInscripcionesComponent,
-    InscripcionesDetalleComponent
+    InscripcionesDetalleComponent,
   ],
   imports: [
     CommonModule,
@@ -35,11 +37,13 @@ import { InscripcionesRoutingModule } from './inscripciones-routing.module';
     MatDialogModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    StoreModule.forFeature(inscripcionesFeature),
+    EffectsModule.forFeature([InscripcionesEffects]),
   ],
   exports: [
-    InscripcionesComponent, 
+    InscripcionesComponent,
     InscripcionesDetalleComponent,
     InscripcionesRoutingModule,
-  ]
+  ],
 })
-export class InscripcionesModule { }
+export class InscripcionesModule {}

@@ -5,13 +5,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AbmUsuariosComponent } from './components/abm-usuarios/abm-usuarios.component';
 import { Usuario } from 'src/app/core/models';
 import { UsuariosService } from './services/usuarios.service';
-// import {
-//   Decrementar,
-//   Incrementar,
-// } from 'src/app/store/usuario/usuario.actions';
-import { AppState } from 'src/app/store';
-import { Store } from '@ngrx/store';
-import { Observable, map } from 'rxjs';
 
 @Component({
   selector: 'app-usuarios',
@@ -31,23 +24,16 @@ export class UsuariosComponent {
     'editar',
     'eliminar',
   ];
-  // public valorContador: Observable<string>;
   constructor(
     private usuariosService: UsuariosService,
     private dialog: MatDialog,
     private router: Router,
     private activatedRoute: ActivatedRoute // private store: Store<AppState>
-  ) {
-    //   this.valorContador = this.store
-    //     .select('usuario')
-    //     .pipe(map((state) => state.estudiante));
-  }
+  ) {}
 
   ngOnInit(): void {
     this.usuariosService.obtenerUsuarios().subscribe({
       next: (usuario) => {
-        console.log(usuario);
-
         this.dataSource.data = usuario;
       },
     });
@@ -59,12 +45,15 @@ export class UsuariosComponent {
       if (formValue) {
         this.usuariosService.crearUsuario(formValue);
       }
+      this.usuariosService.obtenerUsuarios().subscribe({
+        next: (usuario) => {
+          this.dataSource.data = usuario;
+        },
+      });
     });
   }
 
   editarUsuarios(Usuarios: Usuario): void {
-    console.log(Usuarios);
-
     const dialog = this.dialog.open(AbmUsuariosComponent, {
       data: {
         Usuarios,
@@ -72,9 +61,6 @@ export class UsuariosComponent {
     });
 
     dialog.afterClosed().subscribe((formValue) => {
-      console.log(Usuarios.id);
-      console.log(formValue);
-
       if (formValue) {
         this.usuariosService.editarUsuario(Usuarios.id, formValue);
       }
@@ -97,11 +83,4 @@ export class UsuariosComponent {
       relativeTo: this.activatedRoute,
     });
   }
-  //   incrementar(): void {
-  //     this.store.dispatch(Incrementar());
-  //   }
-
-  //   decrementar(): void {
-  //     this.store.dispatch(Decrementar());
-  //   }
 }

@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AbmCursosComponent } from './components/abm-cursos/abm-cursos.component';
 import { Observable } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService } from 'src/app/auth/services/auth.service';
+import { Usuario } from 'src/app/core/models';
 
 @Component({
   selector: 'app-cursos',
@@ -14,6 +16,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class CursosComponent implements OnInit {
   dataSource = new MatTableDataSource();
+  authUser$: Observable<Usuario | null>;
 
   displayedColumns = [
     'id',
@@ -28,9 +31,12 @@ export class CursosComponent implements OnInit {
   constructor(
     private cursosService: CursosService,
     private dialog: MatDialog,
+    private authService: AuthService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-  ) {}
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.authUser$ = this.authService.obtenerUsuarioAutenticado();
+  }
 
   ngOnInit(): void {
     this.cursosService.obtenerCursos().subscribe({
@@ -42,27 +48,25 @@ export class CursosComponent implements OnInit {
 
   crearCurso(): void {
     const dialog = this.dialog.open(AbmCursosComponent);
-    dialog.afterClosed()
-      .subscribe((formValue) => {
-        if (formValue) {
-          this.cursosService.crearCurso(formValue)
-        }
-      });
+    dialog.afterClosed().subscribe((formValue) => {
+      if (formValue) {
+        this.cursosService.crearCurso(formValue);
+      }
+    });
   }
 
   editarCurso(curso: Curso): void {
     const dialog = this.dialog.open(AbmCursosComponent, {
       data: {
         curso,
-      }
-    })
+      },
+    });
 
-    dialog.afterClosed()
-      .subscribe((formValue) => {
-        if (formValue) {
-          this.cursosService.editarCurso(curso.id, formValue);
-        }
-      })
+    dialog.afterClosed().subscribe((formValue) => {
+      if (formValue) {
+        this.cursosService.editarCurso(curso.id, formValue);
+      }
+    });
   }
 
   eliminarCurso(curso: Curso): void {
@@ -81,5 +85,4 @@ export class CursosComponent implements OnInit {
       relativeTo: this.activatedRoute,
     });
   }
-
 }

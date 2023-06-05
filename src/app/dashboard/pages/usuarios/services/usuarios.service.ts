@@ -4,132 +4,100 @@ import { BehaviorSubject, Observable, map, take } from 'rxjs';
 import { Usuario, CrearUsuarioPayload } from 'src/app/core/models';
 import { enviroment } from 'src/environments/environments';
 
-
-
-
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UsuariosService {
-  private usuario$ = new BehaviorSubject<Usuario[]>(
-    []
-  );
+  private usuario$ = new BehaviorSubject<Usuario[]>([]);
 
-  constructor(
-  
-    private httpClient: HttpClient,
-  ) { }
+  constructor(private httpClient: HttpClient) {}
+
   obtenerUsuarios(): Observable<Usuario[]> {
-    this.httpClient.get<Usuario[]>(
-      `${enviroment.apiBaseUrl}/usuarios`,
-      
-    ).subscribe({
-      next: (usuarios) => {
-        this.usuario$.next(usuarios);
-      }
-    });
-    return this.usuario$;
- 
+    this.httpClient
+      .get<Usuario[]>(`${enviroment.apiBaseUrl}/usuarios`)
+      .subscribe({
+        next: (usuarios) => {
+          this.usuario$.next(usuarios);
+        },
+      });
+    return this.usuario$.asObservable();
   }
 
   getUsuarioById(usuarioId: number): Observable<Usuario | undefined> {
-
-    return this.httpClient.get<Usuario[]>(
-      `${enviroment.apiBaseUrl}/usuarios?id=${usuarioId}`,
-    
-    )
+    return this.httpClient
+      .get<Usuario[]>(`${enviroment.apiBaseUrl}/usuarios?id=${usuarioId}`)
       .pipe(
         map((usuarios) => {
-          
-          return  usuarios[0];
-        }),
-       
+          return usuarios[0];
+        })
       );
-   
   }
 
   crearUsuario(payload: CrearUsuarioPayload): Observable<Usuario[]> {
-  
-    this.usuario$
-      .pipe(
-        take(1)
-      )
-      .subscribe({
-        next: (usuario) => {
-          this.httpClient.post<Usuario>(
-            `${enviroment.apiBaseUrl}/usuarios`,{
-              id: usuario.length + 1,
-              ...payload,
-            },);
-           
+    let numeroDeUsuarios: number = 0;
 
-console.log({
-  id: usuario.length + 1,
-  ...payload,
-});
+    this.obtenerUsuarios().subscribe((usuarios) => {
+      numeroDeUsuarios = usuarios.length;
+    });
 
-
-
-        
-        },
-        complete: () => {},
-        error: () => {}
-      });
-
-      // then => next
-      // catch => error
-      // finally => complete
-
-    return this.usuario$.asObservable();
-  }
-
-  editarUsuario(usuarioId: number, actualizacion: Partial<Usuario>): Observable<Usuario[]> {
- 
-    
-    this.usuario$
-      .pipe(
-        take(1),
-      )
-      .subscribe({
-      next: (usuario) => {
-
-      const usuariosActualizados = usuario.map((usuario) => {
-      if (usuario.id === usuarioId) {
-      return {
-      ...usuario,
-      ...actualizacion,
-      }
-      } else {
-      return usuario;
-      }
+    this.httpClient
+      .post<Usuario[]>(`${enviroment.apiBaseUrl}/usuarios`, {
+        id: numeroDeUsuarios + 1,
+        ...payload,
+        token: 'woebfowebgowueb',
       })
-
-      this.usuario$.next(usuariosActualizados);
-      },
-      complete: () => {},
-      error: () => {}
-     });
-
+      .subscribe({
+        next: (usuarios) => {
+          this.usuario$.next(usuarios);
+        },
+      });
     return this.usuario$.asObservable();
   }
 
-
-  eliminarUsuario(usuarioId: number): Observable<Usuario[]> {
-    this.usuario$
-    .pipe(
-      take(1)
-    )
-    .subscribe({
+  editarUsuario(
+    usuarioId: number,
+    actualizacion: Partial<Usuario>
+  ): Observable<Usuario[]> {
+    this.usuario$.pipe(take(1)).subscribe({
       next: (usuario) => {
-        const usuariosActualizados = usuario.filter((usuario) => usuario.id !== usuarioId)
+        const usuariosActualizados = usuario.map((usuario) => {
+          if (usuario.id === usuarioId) {
+            return {
+              ...usuario,
+              ...actualizacion,
+            };
+          } else {
+            return usuario;
+          }
+        });
+
         this.usuario$.next(usuariosActualizados);
       },
       complete: () => {},
-      error: () => {}
+      error: () => {},
     });
 
     return this.usuario$.asObservable();
   }
 
+  eliminarUsuario(usuarioId: number): Observable<Usuario[]> {
+    let usuariosActuales: Usuario[] = [];
+
+    this.obtenerUsuarios().subscribe((usuarios) => {
+      usuariosActuales = usuarios;
+    });
+
+    this.httpClient
+      .delete<Usuario[]>(`${enviroment.apiBaseUrl}/usuarios/${usuarioId}`)
+      .subscribe({
+        next: (_) => {
+          const usuariosActualizados = usuariosActuales.filter(
+            (usuario) => usuario.id !== usuarioId
+          );
+          this.usuario$.next(usuariosActualizados);
+        },
+      });
+
+    return this.usuario$.asObservable();
+  }
 }

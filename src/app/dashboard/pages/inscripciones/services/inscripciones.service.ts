@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, map, take } from 'rxjs';
+import { BehaviorSubject, Observable, map, take, concatMap } from 'rxjs';
 import { Inscripcion, CrearInscripcionPayload } from '../models';
+import { HttpClient } from '@angular/common/http';
+import { enviroment } from 'src/environments/environments';
 
-
-
-const INS_MOCKS: Inscripcion[] = [
+/*const INS_MOCKS: Inscripcion[] = [
   {
     id: 1,
     estudiante: 'Emmanuel',
@@ -27,100 +27,80 @@ const INS_MOCKS: Inscripcion[] = [
     fecha_inicio: new Date(),
   },
 ];
-
+*/
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class InscripcionesService {
-  private inscripcion$ = new BehaviorSubject<Inscripcion[]>(
-    []
-  );
+  private inscripcion$ = new BehaviorSubject<Inscripcion[]>([]);
 
-  constructor() { }
-  obtenerCursos(): Observable<Inscripcion[]> {
-    this.inscripcion$.next(INS_MOCKS);
-    return this.inscripcion$.asObservable();
+  constructor(private httpClient: HttpClient) {}
+
+  obtenerInscripciones(): Observable<Inscripcion[]> {
+    return this.httpClient.get<Inscripcion[]>(
+      `${enviroment.apiBaseUrl}/inscripciones`
+    );
   }
 
-  getCursoById(inscripcionId: number): Observable<Inscripcion | undefined> {
-    return this.inscripcion$.asObservable()
-      .pipe(
-        map((Inscripcion) => Inscripcion.find((i) => i.id === inscripcionId))
+  getInscripcionById(
+    inscripcionid: number
+  ): Observable<Inscripcion | undefined> {
+    return this.httpClient
+      .get<Inscripcion[]>(
+        `${enviroment.apiBaseUrl}/inscripciones?id=${inscripcionid}`
       )
+      .pipe(
+        map((inscripcion) => {
+          return inscripcion[0];
+        })
+      );
   }
 
-  crearInscripcion(payload: CrearInscripcionPayload): Observable<Inscripcion[]> {
-    this.inscripcion$
+  crearInscripcion(data: CrearInscripcionPayload): Observable<Inscripcion> {
+    return this.httpClient
+      .post<Inscripcion>(`${enviroment.apiBaseUrl}/inscripciones`, data)
       .pipe(
-        take(1)
-      )
-      .subscribe({
-        next: (inscripcion) => {
-          this.inscripcion$.next([
-            ...inscripcion,
-            {
-              id: inscripcion.length + 1,
-              ...payload,
-            },
-          ]);
-        },
-        complete: () => {},
-        error: () => {}
-      });
-
-      // then => next
-      // catch => error
-      // finally => complete
-
-    return this.inscripcion$.asObservable();
+        concatMap((createResponse) =>
+          this.getInscriptionWithAllById(createResponse.id)
+        )
+      );
   }
 
-  editarInscripcion(inscripcionId: number, actualizacion: Partial<Inscripcion>): Observable<Inscripcion[]> {
- 
-    
-    this.inscripcion$
-      .pipe(
-        take(1),
-      )
-      .subscribe({
+  getInscriptionWithAllById(id: number): Observable<Inscripcion> {
+    return this.httpClient.get<Inscripcion>(
+      `${enviroment.apiBaseUrl}/inscripciones/${id}`
+    );
+  }
+
+  editarInscripcion(
+    inscripcionId: number,
+    actualizacion: Partial<Inscripcion>
+  ): Observable<Inscripcion[]> {
+    this.inscripcion$.pipe(take(1)).subscribe({
       next: (inscripcion) => {
+        const inscripcionesActualizados = inscripcion.map((inscripcion) => {
+          if (inscripcion.id === inscripcionId) {
+            return {
+              ...inscripcion,
+              ...actualizacion,
+            };
+          } else {
+            return inscripcion;
+          }
+        });
 
-      const inscripcionesActualizados = inscripcion.map((inscripcion) => {
-      if (inscripcion.id === inscripcionId) {
-      return {
-      ...inscripcion,
-      ...actualizacion,
-      }
-      } else {
-      return inscripcion;
-      }
-      })
-
-      this.inscripcion$.next(inscripcionesActualizados);
+        this.inscripcion$.next(inscripcionesActualizados);
       },
       complete: () => {},
-      error: () => {}
-     });
-
-    return this.inscripcion$.asObservable();
-  }
-
-
-  eliminarCurso(inscripcionId: number): Observable<Inscripcion[]> {
-    this.inscripcion$
-    .pipe(
-      take(1)
-    )
-    .subscribe({
-      next: (inscripcion) => {
-        const inscripcionActualizados = inscripcion.filter((inscripcion) => inscripcion.id !== inscripcionId)
-        this.inscripcion$.next(inscripcionActualizados);
-      },
-      complete: () => {},
-      error: () => {}
+      error: () => {},
     });
 
     return this.inscripcion$.asObservable();
   }
 
+  eliminarInscripcion(id: number): Observable<unknown> {
+    return this.httpClient.delete(
+      `${enviroment.apiBaseUrl}/inscripciones/${id}`
+    );
+  }
 }

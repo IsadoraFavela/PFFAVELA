@@ -5,15 +5,20 @@ import { Inscripcion } from '../inscripciones/models';
 import { InscripcionesService } from '../inscripciones/services/inscripciones.service';
 import { AbmInscripcionesComponent } from './components/abm-inscripciones/abm-inscripciones.component';
 import { ActivatedRoute, Router } from '@angular/router';
-
+import { Store } from '@ngrx/store';
+import { InscripcionesActions } from './store/inscripciones.actions';
+import { Observable } from 'rxjs';
+import { selectInscripcionesState } from './store/inscripciones.selectors';
+import { State } from './store/inscripciones.reducer';
 
 @Component({
   selector: 'app-inscripciones',
   templateUrl: './inscripciones.component.html',
-  styleUrls: ['./inscripciones.component.scss']
+  styleUrls: ['./inscripciones.component.scss'],
 })
 export class InscripcionesComponent implements OnInit {
-  dataSource = new MatTableDataSource();
+  state$: Observable<State>;
+  dataSource = new MatTableDataSource<Inscripcion>();
 
   displayedColumns = [
     'id',
@@ -22,59 +27,53 @@ export class InscripcionesComponent implements OnInit {
     'fecha_inicio',
     'fecha_fin',
     'detalle',
-    'editar',
+
     'eliminar',
   ];
+
   constructor(
     private inscripcionesService: InscripcionesService,
+    private store: Store,
     private dialog: MatDialog,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
-  ) {}
+    private activatedRoute: ActivatedRoute
+  ) {
+    this.state$ = this.store.select(selectInscripcionesState);
+  }
 
   ngOnInit(): void {
-    this.inscripcionesService.obtenerCursos().subscribe({ 
-    
-      next: (inscripcion) => {
-        console.log(inscripcion);
-        
-        this.dataSource.data = inscripcion;
-      },
+    this.store.dispatch(InscripcionesActions.loadInscripciones());
+    this.state$.subscribe((state) => {
+      this.dataSource.data = state.listadeInscripciones;
     });
   }
 
   crearInscripcion(): void {
     const dialog = this.dialog.open(AbmInscripcionesComponent);
-    dialog.afterClosed()
-      .subscribe((formValue) => {
-        if (formValue) {
-          this.inscripcionesService.crearInscripcion(formValue)
-        }
-      });
+    dialog.afterClosed().subscribe((formValue) => {
+      if (formValue) {
+        this.inscripcionesService.crearInscripcion(formValue);
+      }
+    });
   }
 
   editarInscripcion(inscripcion: Inscripcion): void {
     const dialog = this.dialog.open(AbmInscripcionesComponent, {
       data: {
         inscripcion,
+      },
+    });
+
+    dialog.afterClosed().subscribe((formValue) => {
+      if (formValue) {
+        this.inscripcionesService.editarInscripcion(inscripcion.id, formValue);
       }
-    })
-
-    dialog.afterClosed()
-      .subscribe((formValue) => {
-        console.log(inscripcion.id);
-        console.log(formValue);
-
-        
-        if (formValue) {
-          this.inscripcionesService.editarInscripcion(inscripcion.id, formValue);
-        }
-      })
+    });
   }
 
-  eliminarInscripcion(Inscripcion: Inscripcion): void {
+  eliminarInscripcion(id: number): void {
     if (confirm('Está seguro?')) {
-      this.inscripcionesService.eliminarCurso(Inscripcion.id);
+      this.store.dispatch(InscripcionesActions.deleteInscripcion({ id }));
     }
   }
 
@@ -88,5 +87,4 @@ export class InscripcionesComponent implements OnInit {
       relativeTo: this.activatedRoute,
     });
   }
-   
 }
